@@ -1,17 +1,29 @@
-package com.zamahaka.todoappkotlinrxdagger.data.source
+package com.zamahaka.todoappkotlinrxdagger.data.source.remote
 
 import com.zamahaka.todoappkotlinrxdagger.data.Task
+import com.zamahaka.todoappkotlinrxdagger.data.source.TasksDataSource
 import rx.Observable
+import java.util.concurrent.TimeUnit
 
 
 /**
  * Created by Yura Stetsyc on 6/23/17.
  */
-class FakeTasksRemoteDataSource private constructor() : TasksDataSource {
+class TasksRemoteDataSource private constructor() : TasksDataSource {
 
-    override val tasks: Observable<MutableList<Task>> = Observable.from(TASKS_SERVICE_DATA.values).toList()
+    init {
+        val task1 = Task("Build tower in Pisa", "Ground looks good, no foundation work required.")
+        val task2 = Task("Finish bridge in Tacoma", "Found awesome girders at half the cost!")
+        TASKS_SERVICE_DATA.put(task1.id, task1)
+        TASKS_SERVICE_DATA.put(task2.id, task2)
+    }
 
-    override fun getTask(taskId: String): Observable<Task> = Observable.just(TASKS_SERVICE_DATA[taskId])
+    override val tasks: Observable<MutableList<Task>> = Observable.from(TASKS_SERVICE_DATA.values)
+            .delay(SERVICE_LATENCY_IN_MILLIS, TimeUnit.MILLISECONDS).toList()
+
+    override fun getTask(taskId: String): Observable<Task> = TASKS_SERVICE_DATA[taskId]?.let {
+        Observable.just(it).delay(SERVICE_LATENCY_IN_MILLIS, TimeUnit.MILLISECONDS)
+    } ?: Observable.empty()
 
     override fun saveTask(task: Task) {
         TASKS_SERVICE_DATA.put(task.id, task)
@@ -56,13 +68,14 @@ class FakeTasksRemoteDataSource private constructor() : TasksDataSource {
     }
 
     companion object {
+        val SERVICE_LATENCY_IN_MILLIS = 2000L
         private val TASKS_SERVICE_DATA = mutableMapOf<String, Task>()
 
-        private var INSTANCE: FakeTasksRemoteDataSource? = null
+        private var sINSTANCE: TasksRemoteDataSource? = null
 
-        fun getInstance() = INSTANCE ?: run {
-            val dataSource = FakeTasksRemoteDataSource()
-            INSTANCE = dataSource
+        fun getInstance() = sINSTANCE ?: run {
+            val dataSource = TasksRemoteDataSource()
+            sINSTANCE = dataSource
 
             dataSource
         }
