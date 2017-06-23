@@ -40,9 +40,9 @@ dependencies {
     implementation "com.android.support:recyclerview-v7:$supportLibraryVersion"
     implementation "com.android.support:support-v4:$supportLibraryVersion"
 
-    implementation "io.reactivex.rxjava2:rxjava:$rxjavaVersion"
-    implementation "io.reactivex.rxjava2:rxkotlin:$rxkotlinVersion"
-    implementation "io.reactivex.rxjava2:rxandroid:$rxandroidVersion"
+    implementation "io.reactivex:rxjava:$rxjavaVersion"
+//    implementation "io.reactivex:rxkotlin:$rxkotlinVersion"
+    implementation "io.reactivex:rxandroid:$rxandroidVersion"
 
     implementation "com.squareup.sqlbrite:sqlbrite:$sqlbriteVersion"
 }

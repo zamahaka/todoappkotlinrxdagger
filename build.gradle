@@ -30,8 +30,8 @@ task clean(type: Delete) {
 
 ext {
     supportLibraryVersion = '25.4.0'
-    rxjavaVersion = '2.1.0'
-    rxandroidVersion = '2.0.1'
-    rxkotlinVersion = '2.0.3'
+    rxjavaVersion = '1.1.6'
+    rxandroidVersion = '1.2.1'
+    rxkotlinVersion = '2.0.0-RC1'
     sqlbriteVersion = '1.1.1'
 }
